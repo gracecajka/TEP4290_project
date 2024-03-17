@@ -275,8 +275,9 @@ class RenovationStock:
                         outflows_r[max_index] += min_change
                         if counter == 0:
                             outflows_r[max_index] += extra_change
-                else: 
-                    raise Exception(f'ehm...the while loop for adjusting outflows failed.')
+                else:
+                    break 
+                    #raise Exception(f'ehm...the while loop for adjusting outflows failed.')
                 trys +=1
             t1t2_stock_tr[1,:] = t1t2_stock_tr[0,:]        
             for state in range(self.no_ren_states):

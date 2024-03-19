@@ -106,49 +106,23 @@ class RenovationStock:
         self.time_t = time_t
         self.hcs_t = [self.hazard_curve(ren_p_curve, show = True) for ren_p_curve in ren_p_curves_t]
         self.last_time_index = self.time_t[-1] - self.time_t[0]
-        self.no_renovations = len(self.hcs_t) 
+        self.no_renovations = len(self.hcs_t)
         self.no_ren_states = self.no_renovations+1
     
     def renovate(self) -> None:
         '''
         adds the renovated stock to the attributes of the instance
         '''
-        self.s_tc_p_r = self._extend_stock_like(self.s_o_tc_p, self.no_ren_states) # here we import both ren types for all years
+        self.s_tc_p_r = self._extend_stock_like(self.s_o_tc_p, self.no_ren_states)
         #you could also store the outflows by renovation type.
         
-        #time = timeseries, timeslice=cohort
         for time, time_slice in enumerate(self.s_o_tc_p):
             #add your additional dimensions (e.g. type) as ,: after time (but before the renovation state)
             self.s_tc_p_r[time, time, 0] = self.s_o_tc_p[time, time]
             for cohort, cohort_slice in enumerate(time_slice):
-                if cohort < 1980:
-                    cohort_age = time - cohort - (375 - cohort)
-                if cohort >= 1980:
-                    cohort_age = time - cohort
                 #cohort_age = 
                 #cohort_age = time - cohort
-                #! Have some start in the 70s, some in the 90s
-                #if cohort < 1860:
-                    #cohort_age = time - cohort - (370 - cohort)
-                #if cohort >= 1860 and cohort <1900 :
-                 #   cohort_age = time - cohort - (375 - cohort) 
-                #if cohort >= 1900 and cohort <1920 :
-                #    cohort_age = time - cohort - (380 - cohort) 
-                #if cohort >= 1920 and cohort <1940 :
-                #    cohort_age = time - cohort - (385 - cohort)        
-                #if cohort >= 1940 and cohort <1960 :
-                    #cohort_age = 360 - cohort
-                 #   cohort_age = time - cohort - (390 - cohort)
-                #if cohort >= 1960 and cohort <1980 :
-                 #   #cohort_age = 360 - cohort
-                  #  cohort_age = time - cohort - (395 - cohort)
-
-
-                #if cohort < 1980:
-                 #   #cohort_age = 360 - cohort
-                 #   cohort_age = time - cohort - (370 - cohort)
-                #if cohort >= 1980:
-                 #   cohort_age = time - cohort 
+                cohort_age = time - cohort
 
                 #print(f'the cohort age is {cohort_age}.')
                 #or other cohort age definition if you want to change start date of renovation
@@ -156,12 +130,10 @@ class RenovationStock:
                 # we only check if there is a stock for this cohort at this time (cuts runtime in half!)
                 if np.sum(cohort_slice) > 0: 
                     
-                    if cohort_age > len(self.hcs_t[0]):
-                        raise Exception(f'your hazard function doesnt cover age {cohort_age}.')
+                    #if cohort_age > len(self.hcs_t[0]):
+                    #    raise Exception(f'your hazard function doesnt cover age {cohort_age}.')
                     #add another for loop per dimension beyond tc here
                     
-                    #! for loop of range of r?
-                
                     for r in range(1, self.no_ren_states):
                         #split according to renovation
                         self.s_tc_p_r[time, cohort, :] = self._add_to_r(self.s_tc_p_r[time, cohort, :], cohort_age, r)

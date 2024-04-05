@@ -19,7 +19,7 @@ from dynamic_stock_model import DynamicStockModel
 
 # %%
 
-def get_renovation_cycles(time_interval:list, no_cycles:int, ren_mean_cycle:float, 
+def get_renovation_cycles(perc_renovated, time_interval:list, no_cycles:int, ren_mean_cycle:float, 
                           ren_rel_deviation:float,loc:float = 0, distribution: str = 'norm', show: bool = False):
     '''
     Arguments:
@@ -42,14 +42,14 @@ def get_renovation_cycles(time_interval:list, no_cycles:int, ren_mean_cycle:floa
     ren_cycles = np.zeros(np.shape(times_t))
     ren_std_cycle = ren_mean_cycle*ren_rel_deviation
     cycle_index = 1
-    while (cycle_index-1) < no_cycles and not (cycle_index * ren_mean_cycle > 1.5 * time_interval[1]): 
-      if distribution == 'norm':
-        single_renovation = (1/3)*norm.pdf(times_t,cycle_index*ren_mean_cycle, ren_std_cycle)
-      elif distribution == 'lognorm':
-        single_renovation = (1/3)*lognorm.pdf(times_t,s = 2*ren_rel_deviation, loc = cycle_index*ren_mean_cycle-2*ren_std_cycle+ times_t[0] + loc, scale = ren_mean_cycle-ren_std_cycle)
-        #lognorm(x, s, loc, scale)
-      ren_cycles += single_renovation
-      cycle_index +=1
+    while (cycle_index-1) < no_cycles and not (cycle_index * ren_mean_cycle > 1.5 * time_interval[1]):        
+        if distribution == 'norm':
+            single_renovation = perc_renovated*norm.pdf(times_t,cycle_index*ren_mean_cycle, ren_std_cycle)
+        elif distribution == 'lognorm':
+            single_renovation = perc_renovated*lognorm.pdf(times_t,s = 2*ren_rel_deviation, loc = cycle_index*ren_mean_cycle-2*ren_std_cycle+ times_t[0] + loc, scale = ren_mean_cycle-ren_std_cycle)
+            #lognorm(x, s, loc, scale)
+        ren_cycles += single_renovation
+        cycle_index +=1
 
     if show:
       plt.figure(figsize=(12,8))
@@ -122,7 +122,7 @@ class RenovationStock:
             self.s_tc_p_r[time, time, 0] = self.s_o_tc_p[time, time]
             for cohort, cohort_slice in enumerate(time_slice):
                 if cohort < 1980:
-                    cohort_age = time - cohort - (365 - cohort)
+                    cohort_age = time - cohort - (375 - cohort)
                 if cohort >= 1980:
                     cohort_age = time - cohort
                 #cohort_age = 

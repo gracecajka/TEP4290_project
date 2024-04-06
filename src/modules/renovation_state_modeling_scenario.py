@@ -122,7 +122,7 @@ class RenovationStock:
             self.s_tc_p_r[time, time, 0] = self.s_o_tc_p[time, time]
             for cohort, cohort_slice in enumerate(time_slice):
                 if cohort < 1980:
-                    cohort_age = time - cohort - (375 - cohort)
+                    cohort_age = time - cohort - (365 - cohort)
                 if cohort >= 1980:
                     cohort_age = time - cohort
                 #cohort_age = 

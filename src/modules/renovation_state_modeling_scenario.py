@@ -50,15 +50,14 @@ def get_renovation_cycles(perc_renovated, time_interval:list, no_cycles:int, ren
             #lognorm(x, s, loc, scale)
         ren_cycles += single_renovation
         cycle_index +=1
-
     if show:
       plt.figure(figsize=(12,8))
       if no_cycles >1:
         if distribution == 'norm':
-          first_cycle = (1/3)*norm.pdf(times_t,ren_mean_cycle, ren_std_cycle)
+          first_cycle = perc_renovated*norm.pdf(times_t,ren_mean_cycle, ren_std_cycle)
         elif distribution == 'lognorm':
           print(f'we set s to {2*ren_rel_deviation}, loc to {ren_mean_cycle-2*ren_std_cycle}, scale to {ren_mean_cycle - ren_std_cycle}.')
-          first_cycle =(1/3)*lognorm.pdf(times_t,s = 2*ren_rel_deviation, loc = ren_mean_cycle-2*ren_std_cycle + times_t[0] + loc, scale = ren_mean_cycle-ren_std_cycle)
+          first_cycle =perc_renovated*lognorm.pdf(times_t,s = 2*ren_rel_deviation, loc = ren_mean_cycle-2*ren_std_cycle + times_t[0] + loc, scale = ren_mean_cycle-ren_std_cycle)
         plt.plot(times_t,first_cycle,'-*', c = 'crimson', label = 'first single renovation cycle')
       plt.plot(times_t,ren_cycles, label = 'Renovation probability')
       plt.legend(loc = 'best')

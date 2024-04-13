@@ -44,9 +44,9 @@ def get_renovation_cycles(time_interval:list, no_cycles:int, ren_mean_cycle:floa
     cycle_index = 1
     while (cycle_index-1) < no_cycles and not (cycle_index * ren_mean_cycle > 1.5 * time_interval[1]): 
       if distribution == 'norm':
-        single_renovation = (1/3)*norm.pdf(times_t,cycle_index*ren_mean_cycle, ren_std_cycle)
+        single_renovation = (1/5)*norm.pdf(times_t,cycle_index*ren_mean_cycle, ren_std_cycle)
       elif distribution == 'lognorm':
-        single_renovation = (1/3)*lognorm.pdf(times_t,s = 2*ren_rel_deviation, loc = cycle_index*ren_mean_cycle-2*ren_std_cycle+ times_t[0] + loc, scale = ren_mean_cycle-ren_std_cycle)
+        single_renovation = (1/5)*lognorm.pdf(times_t,s = 2*ren_rel_deviation, loc = cycle_index*ren_mean_cycle-2*ren_std_cycle+ times_t[0] + loc, scale = ren_mean_cycle-ren_std_cycle)
         #lognorm(x, s, loc, scale)
       ren_cycles += single_renovation
       cycle_index +=1
